@@ -123,6 +123,21 @@ run:
         - bash -c "ln    -s           /shared/{uploads,backups} $home/public"
         - chown -R discourse:www-data /shared/log/rails /shared/uploads /shared/backups
 
+  # Renaming of category and topic to custom names (company and issue)
+  - exec:
+      cd: /var/www/discourse
+      cmd:
+        - |
+            find \
+            ./app ./config ./db ./lib ./plugins ./public ./script ./spec ./test ./vendor \
+            -type f -exec sed -i \
+            -e 's/categor/compan/g' \
+            -e 's/Categor/Compan/g' \
+            -e 's/topic/issue/g' \
+            -e 's/Topic/Issue/g' '{}' \;
+        - find . -name "*categor*" -depth -execdir rename 's/categor/compan/' '{}' \;
+        - find . -name "*topic*" -depth -execdir rename 's/topic/issue/' '{}' \;
+
   - exec:
       cmd:
         - "cp $home/config/nginx.sample.conf /etc/nginx/conf.d/discourse.conf"
