@@ -2,7 +2,7 @@
 #
 require 'pty'
 
-$version = "1.3.1"
+$version = "1.3.5"
 
 $docker_squash = "https://github.com/jwilder/docker-squash/releases/download/v0.2.0/docker-squash-linux-amd64-v0.2.0.tar.gz"
 
@@ -46,6 +46,8 @@ def build(path, tag, is_base)
 
   run("docker save #{img} | ./docker-squash -t #{tag} -verbose #{is_base && "-from root"} | docker load")
 end
+
+run "(cd base && ./download_phantomjs)"
 
 build("base",$base_image,true)
 build("discourse",$image,false)
